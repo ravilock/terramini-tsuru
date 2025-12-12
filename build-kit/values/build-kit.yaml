@@ -1,0 +1,38 @@
+%{ if replicas != null }
+replicaCount: ${ replicas }
+%{ endif }
+
+image:
+  repository: moby/buildkit
+
+  %{ if image_pull_policy != "" }
+  pullPolicy: ${ image_pull_policy }
+  %{ endif }
+
+config: |-
+  debug = false
+
+  [grpc]
+    address = ["unix:///var/run/buildkit/buildkitd.sock", "tcp://0.0.0.0:8080"]
+
+  [worker.oci]
+    enabled = true
+    max-parallelism = 100
+    cniPoolSize = 32
+
+    gc = true
+    gckeepstorage = 0
+
+  [[worker.oci.gcpolicy]]
+    all = true
+    keepDuration = 172800 # 2 days in seconds
+    keepBytes = 0
+
+  [worker.containerd]
+    enabled = false
+
+  [registry."100.64.100.100:5000"]
+    http = true
+
+securityContext:
+  privileged: true

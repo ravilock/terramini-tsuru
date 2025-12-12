@@ -1,0 +1,30 @@
+image:
+  repository: tsuru/acl-operator
+  tag: "${image_tag}"
+
+replicaCount: ${replicas}
+
+tsuru:
+  address: "${tsuru_address}"
+  token: "${tsuru_token}"
+
+aclapi:
+  address: "${aclapi_address}"
+  user: "${aclapi_user}"
+  password: "${aclapi_password}"
+
+%{ if metrics }
+podMonitor:
+  enabled: true
+%{ endif }
+
+gc:
+  dryRun: ${gc_dry_run}
+
+dnsConfig: ${dns_config}
+
+affinity: ${affinity}
+
+tolerations: ${tolerations}
+
+resources: ${resources}

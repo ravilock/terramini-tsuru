@@ -1,0 +1,95 @@
+replicaCount: 1
+
+imagePullSecrets: []
+
+deployAgent:
+  image:
+    repository: tsuru/deploy-agent-local
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  # env:
+  # - name: MY_ENV
+  #   value: foo
+  env:
+    - name: BUILDKIT_NO_CLIENT_TOKEN
+      value: "true"
+
+  extraArgs: []
+
+  # Docker config file
+  # See more https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
+  dockerConfig: ""
+
+  buildkit:
+    autoDiscovery:
+      enabled: true
+      podSelector: app.kubernetes.io/name=buildkit
+      namespace: "tsuru"
+      port: 8080
+      useSameNamespaceAsTsuruApp: false
+      setTsuruAppLabels: false
+      timeout: 5m
+
+    scale:
+      enabled: true
+      statefulset: "buildkit"
+      gracefulPeriod: 2h
+
+buildkit:
+  image:
+    repository: moby/buildkit
+    pullPolicy: IfNotPresent
+    tag: v0.10.6
+
+  # env:
+  # - name: MY_ENV
+  #   value: foo
+  env: []
+
+  resources: {}
+  volumeMounts: []
+
+  securityContext:
+    privileged: true
+
+  readinessProbe:
+    exec:
+      command:
+        - /usr/bin/buildctl
+        - -timeout=1
+        - debug
+        - workers
+    periodSeconds: 5
+    successThreshold: 5
+
+  # buildkitd config file
+  # See more: https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
+  config: |-
+    debug = true
+
+    [grpc]
+      address = [
+        "tcp://0.0.0.0:8001",
+        "unix:///run/buildkit/buildkitd.sock",
+      ]
+
+    [worker.containerd]
+      enabled = false
+
+    [worker.oci]
+      enabled = true
+      gc = false
+
+      # NOTE: Force x86_64 arch as Tsuru doesn't support different ones yet.
+      platforms = [
+        "linux/amd64"
+      ]
+
+    [registry."100.64.100.100:5000"]
+      http = true
+
+podMonitor:
+  enabled: false
+
+podAnnotations: {}
