@@ -35,3 +35,9 @@ variable "build-kit-enabled" {
   description = "Flag to enable or disable build kit inside the cluster."
   default     = true
 }
+
+variable "keda-enabled" {
+  type        = bool
+  description = "Flag to enable or disable KEDA inside the cluster."
+  default     = true
+}

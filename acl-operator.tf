@@ -1,6 +1,6 @@
 module "acl-operator" {
   count  = var.acl-operator-enabled ? 1 : 0
-  source = "./acl-operator/"
+  source = "./modules/acl-operator/"
 
   tsuru_address = "http://host.minikube.internal:8080"
   tsuru_token   = var.tsuru_token
