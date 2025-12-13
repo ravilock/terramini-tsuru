@@ -1,0 +1,20 @@
+image:
+  pullPolicy: IfNotPresent
+
+extraArgs:
+  keda:
+    # NOTE(nettoclaudio): keda-operator does a lot of patch operations changing
+    # the last active timestamp in ScaledObject's status subresource.
+    # So we have to increase the default QPS/burst to avoid throttling on
+    # controller's side. Otherwise it will start to growing excessively the
+    # controller's queue - delaying the update of HPA for the final user.
+    kube-api-qps: 100   # 5 times the default QPS (20)
+    kube-api-burst: 150 # 5 times the default burst (30)
+
+podDisruptionBudget:
+  operator:
+    maxUnavailable: 10%
+  metrics:
+    maxUnavailable: 10%
+  webhooks:
+    maxUnavailable: 10%
