@@ -4,7 +4,7 @@ imagePullSecrets: []
 
 deployAgent:
   image:
-    repository: tsuru/deploy-agent-local
+    repository: tsuru/deploy-agent
     pullPolicy: IfNotPresent
     tag: "latest"
 
