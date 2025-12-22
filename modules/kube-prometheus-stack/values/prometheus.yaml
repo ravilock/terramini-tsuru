@@ -1,0 +1,221 @@
+grafana:
+  enabled: false
+
+kubelet:
+ serviceMonitor:
+   cAdvisorMetricRelabelings:
+   - sourceLabels: [__name__]
+     separator: ;
+     regex: "container_(tasks_state|memory_fail.*)"
+     action: drop
+
+alertmanager:
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict-local-volumes: "alertmanager-kube-prometheus-stack-alertmanager-db"
+
+  enabled: true
+
+  service:
+    type: ClusterIP
+    annotations:
+      cloud.google.com/neg: '{"ingress": true}'
+
+  ingress:
+    enabled: true
+    pathType: Prefix
+    paths:
+    - '/'
+    annotations:
+      merge.ingress.kubernetes.io/config: kubernetes-shared-ingress
+      cert-manager.io/cluster-issuer: private-globo-ca
+    tls:
+    - secretName: "kube-alert-manager-tls"
+  alertmanagerSpec:
+    image:
+      tag: v0.23.0
+    replicas: ${alertmanager_replicas}
+    alertmanagerConfigNamespaceSelector:
+      matchLabels:
+        app.kubernetes.io/managed-by: terraform # this is a form to use all namespaces
+
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['...']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'null'
+      routes:
+      - match:
+          alertname: Watchdog
+        receiver: 'null'
+      - match:
+          device: gcfsd
+        receiver: 'null'
+      - match:
+          severity: page
+        receiver: zabbix
+        continue: true
+      - match:
+          alertname: "rpaas:cert-expired"
+        receiver: certificate-hub-critical
+        continue: true
+      - match:
+          alertname: "rpaas:cert-expiring-10-days"
+        receiver: certificate-hub-critical
+        continue: true
+      - match:
+          alertname: "rpaas:cert-expiring-20-days"
+        receiver: certificate-hub-warning
+        continue: true
+
+      - match:
+          alertname: "app:cert-expired"
+        receiver: certificate-hub-critical
+        continue: true
+      - match:
+          alertname: "app:cert-expiring-10-days"
+        receiver: certificate-hub-critical
+        continue: true
+      - match:
+          alertname: "app:cert-expiring-20-days"
+        receiver: certificate-hub-warning
+        continue: true
+    receivers:
+    - name: 'null'
+    - '/etc/alertmanager/config/*.tmpl'
+
+kube-state-metrics:
+  image:
+    tag: ${kube_state_metrics_tag}
+  metricLabelsAllowlist:
+    - 'pods=[*]'
+    - 'nodes=[*]'
+    - 'persistentvolumeclaims=[*]'
+    - 'jobs=[*]'
+    - 'cronjobs=[*]'
+    - 'deployments=[*]'
+    - 'horizontalpodautoscalers=[*]'
+
+  collectors:
+    - certificatesigningrequests
+    - configmaps
+    - cronjobs
+    - daemonsets
+    - deployments
+    - endpoints
+    - horizontalpodautoscalers
+    - ingresses
+    - jobs
+    - limitranges
+    - mutatingwebhookconfigurations
+    - namespaces
+    - networkpolicies
+    - nodes
+    - persistentvolumeclaims
+    - persistentvolumes
+    - poddisruptionbudgets
+    - pods
+    - replicasets
+    - replicationcontrollers
+    - resourcequotas
+    - secrets
+    - services
+    - statefulsets
+    - storageclasses
+    - validatingwebhookconfigurations
+    - volumeattachments
+
+  resources:
+    requests:
+      cpu: ${kube_state_metrics_resources.cpu_requests}
+      memory: ${kube_state_metrics_resources.memory_requests}
+    limits:
+      cpu: ${kube_state_metrics_resources.cpu_limits}
+      memory: ${kube_state_metrics_resources.memory_limits}
+
+defaultRules:
+  create: true
+  disabled:
+    KubeHpaMaxedOut: true # aplicações em stopped ficam com hpa maxed out, para evitar esse alerta confuso, desabilitamos
+  rules:
+    kubeApiserver: false
+    kubeApiserverAvailability: false
+    kubeApiserverSlos: false
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: ${prometheus_operator_resources.cpu_requests}
+      memory: ${prometheus_operator_resources.memory_requests}
+    limits:
+      cpu: ${prometheus_operator_resources.cpu_limits}
+      memory: ${prometheus_operator_resources.memory_limits}
+
+prometheus:
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict-local-volumes: "prometheus-kube-prometheus-stack-prometheus-db,config-out"
+
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    paths:
+    - '/'
+    pathType: Prefix
+
+  prometheusSpec:
+    additionalRemoteWrite: ${jsonencode(remote_write)}
+    additionalRemoteRead: ${jsonencode(remote_read)}
+    replicas: ${replicas}
+    nodeSelector: ${jsonencode(node_selector)}
+    affinity: ${jsonencode(affinity)}
+
+    externalLabels:
+      prometheus_from: ${cluster_name}
+
+    image:
+      tag: ${prometheus_image_tag}
+      sha: ""
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: ${disk_size}
+
+    ruleSelectorNilUsesHelmValues: false
+    ruleNamespaceSelector:
+      matchLabels:
+        "prometheus.io/managed-by": "kube-stack-prometheus"
+
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        "prometheus.io/managed-by": "kube-stack-prometheus"
+
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorNamespaceSelector:
+      matchLabels:
+        "prometheus.io/managed-by": "kube-stack-prometheus"
+
+    resources:
+      requests:
+        cpu: ${cpu_requests}
+        memory: ${memory_requests}
+
+      limits:
+        cpu: ${cpu_limits}
+        memory: ${memory_limits}
+
+    tolerations: ${jsonencode(tolerations)}
+
+prometheus-node-exporter:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 10%

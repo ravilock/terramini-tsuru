@@ -41,3 +41,9 @@ variable "keda-enabled" {
   description = "Flag to enable or disable KEDA inside the cluster."
   default     = true
 }
+
+variable "prometheus-stack-enabled" {
+  type        = bool
+  description = "Flag to enable or disable Prometheus inside the cluster."
+  default     = true
+}
