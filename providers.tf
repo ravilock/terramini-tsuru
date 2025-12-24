@@ -1,5 +1,9 @@
 terraform {
   required_providers {
+    tsuru = {
+      source  = "tsuru/tsuru"
+      version = "2.17.1"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
@@ -20,4 +24,8 @@ provider "helm" {
   kubernetes = {
     config_path = "~/.kube/config"
   }
+}
+
+provider "tsuru" {
+  host = var.tsuru_address
 }

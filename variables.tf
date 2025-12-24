@@ -47,3 +47,38 @@ variable "prometheus-stack-enabled" {
   description = "Flag to enable or disable Prometheus inside the cluster."
   default     = true
 }
+
+variable "cluster-address" {
+  type        = string
+  description = "Kubernetes Cluster address"
+}
+
+variable "cluster-port" {
+  type        = string
+  description = "Kubernetes Cluster port"
+}
+
+variable "kube_server" {
+  type        = string
+  description = "Kubernetes API server address"
+}
+
+variable "kube_ca" {
+  type        = string
+  description = "Kubernetes cluster CA certificate (file path)"
+}
+
+variable "kube_client_cert" {
+  type        = string
+  description = "Kubernetes client certificate (file path)"
+}
+
+variable "kube_client_key" {
+  type        = string
+  description = "Kubernetes client key (file path)"
+}
+
+variable "tsuru_address" {
+  type        = string
+  description = "Tsuru API server address"
+}

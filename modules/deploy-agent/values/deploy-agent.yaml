@@ -92,4 +92,8 @@ buildkit:
 podMonitor:
   enabled: false
 
+service:
+  type: "NodePort"
+  port: 80
+
 podAnnotations: {}

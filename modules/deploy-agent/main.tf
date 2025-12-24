@@ -9,3 +9,10 @@ resource "helm_release" "deploy-agent" {
     })
   ]
 }
+
+data "kubernetes_service" "deploy_agent_svc" {
+  metadata {
+    name      = "deploy-agent"
+    namespace = "tsuru"
+  }
+}

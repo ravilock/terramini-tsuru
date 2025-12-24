@@ -1,0 +1,60 @@
+replicaCount: 1
+
+image:
+  repository: 100.64.100.100:5000/tsuru-api
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "dev"
+
+resources: {}
+
+serviceMonitor:
+  enabled: false
+
+secretName: "apikeys-secret-apikeys-tsuru-api"
+
+tsuruConfig:
+  disableIndexPage: false
+  indexPageTemplate: |-
+    <html>
+      <head>
+        <meta http-equiv="refresh" content="0; url=https://docs.tsuru.io/stable/" />
+      </head>
+      <body>
+        <p>
+          <a href="https://docs.tsuru.io/stable/">Docs</a>
+        </p>
+      </body>
+    </html>
+
+  log:
+    disableSyslog: true
+    useStdErr: true
+
+  auth:
+    scheme: native
+    user-registration: true
+
+  debug: true
+  adminTeam: admin
+  useTLS: false
+
+  database:
+    mongodbURL: "100.64.100.100:27017"
+    databaseName: "tsuru"
+
+  routers:
+    ingress-router:
+      type: api
+      api-url: http://kubernetes-router.tsuru.svc.cluster.local/api
+
+  docker:
+    repository: 100.64.100.100:5000
+    repository-namespace: tsuru
+
+    gc:
+      dry-run: true
+
+service:
+  httpsOnly: false
+  type: "NodePort"

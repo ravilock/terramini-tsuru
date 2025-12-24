@@ -4,3 +4,6 @@ deploy-agent-enabled     = true
 build-kit-enabled        = true
 keda-enabled             = true
 prometheus-stack-enabled = false
+cluster-address          = "192.168.49.2"
+cluster-port             = "8443"
+tsuru_address            = "http://192.168.49.2:31608"
