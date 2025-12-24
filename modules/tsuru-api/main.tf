@@ -6,6 +6,7 @@ resource "helm_release" "tsuru-api" {
   cleanup_on_fail = true
   values = [
     templatefile("${path.module}/values/tsuru-api.yaml", {
+      mongodb_url = local.effective_mongodb_url
     })
   ]
 }

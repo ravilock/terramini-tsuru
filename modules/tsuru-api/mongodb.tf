@@ -1,4 +1,6 @@
 resource "kubernetes_stateful_set" "mongodb" {
+  count = var.create_mongodb ? 1 : 0
+
   metadata {
     name      = "tsuru-mongodb"
     namespace = "tsuru"
@@ -76,6 +78,8 @@ resource "kubernetes_stateful_set" "mongodb" {
 }
 
 resource "kubernetes_service" "mongodb" {
+  count = var.create_mongodb ? 1 : 0
+
   metadata {
     name      = "tsuru-mongodb"
     namespace = "tsuru"

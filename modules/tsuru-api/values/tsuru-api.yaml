@@ -40,7 +40,7 @@ tsuruConfig:
   useTLS: false
 
   database:
-    mongodbURL: "tsuru-mongodb.tsuru.svc.cluster.local:27017"
+    mongodbURL: "${mongodb_url}"
     databaseName: "tsuru"
 
   routers:

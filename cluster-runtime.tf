@@ -1,8 +1,8 @@
 module "cluster-runtime" {
   source = "./modules/cluster-runtime"
 
-  tsuru_cluster_name = "my-cluster"
-  tsuru_initial_pool = "my-cluster"
+  tsuru_cluster_name = "local"
+  tsuru_initial_pool = "local"
   cluster_addresses  = ["https://${var.cluster-address}:${var.cluster-port}"]
   extra_custom_data = {
     # "build-service-address" = "dns:////100.64.100.100:${module.deploy-agent[0].service_ip_address}"
