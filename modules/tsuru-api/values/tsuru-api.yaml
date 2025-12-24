@@ -1,10 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: 100.64.100.100:5000/tsuru-api
+  repository: ${docker_registry}/tsuru-api
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "dev"
+  tag: "${image_tag}"
 
 resources: {}
 
@@ -46,11 +46,11 @@ tsuruConfig:
   routers:
     ingress-router:
       type: api
-      api-url: http://kubernetes-router.tsuru.svc.cluster.local/api
+      api-url: ${router_api_url}
 
   docker:
-    repository: 100.64.100.100:5000
-    repository-namespace: tsuru
+    repository: ${docker_registry}
+    repository-namespace: ${docker_registry_namespace}
 
     gc:
       dry-run: true

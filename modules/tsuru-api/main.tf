@@ -6,7 +6,11 @@ resource "helm_release" "tsuru-api" {
   cleanup_on_fail = true
   values = [
     templatefile("${path.module}/values/tsuru-api.yaml", {
-      mongodb_url = local.effective_mongodb_url
+      mongodb_url               = local.effective_mongodb_url
+      docker_registry           = var.docker_registry
+      docker_registry_namespace = var.docker_registry_namespace
+      image_tag                 = var.image_tag
+      router_api_url            = var.router_api_url
     })
   ]
 }
