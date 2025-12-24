@@ -40,3 +40,22 @@ provider "registry.terraform.io/hashicorp/kubernetes" {
     "zh:faf23e45f0090eef8ba28a8aac7ec5d4fdf11a36c40a8d286304567d71c1e7db",
   ]
 }
+
+provider "registry.terraform.io/tsuru/tsuru" {
+  version     = "2.17.1"
+  constraints = "2.17.1"
+  hashes = [
+    "h1:iwi9Bwes+jmaKHY8Ai9mpHNDYch9YoQj7yviqsjYwgM=",
+    "zh:15c719e4b23977c98f3babbfb08facd758cd1c5ffeb26bfd75683ec26e6138aa",
+    "zh:237d0acc5909cf6659a857b412a2aab63a4581356caff3c993e18a198d7c7ac4",
+    "zh:2838a17bb389417eddbd60f6be2c88d7462dbae76000c6a0e354b5b74831b786",
+    "zh:3574c972a790a4a1f0ebb781b0af71568108b72670c7e80f5b0968fd5e32b31e",
+    "zh:41ea49d97d7e73898ccc21d9eba40d48e412792b3c300782ee407c79bf2e5428",
+    "zh:52da2ffbadc5a40e81b6d987868ae0f266b41aba17e6ad1c3e01b18c15857d65",
+    "zh:a0415f1173126e976ddfe0369b165e79e9125534e6859086b45402d737c6b204",
+    "zh:a6724d603ce521a3d307e84d581a5cf43a8bf3b87f57faf25631e0360da97fd4",
+    "zh:a8dd82b70aef0b5ee84aa516af005e84df73332a687b8d9fe139df1ea9c54db6",
+    "zh:bf43de7fb01a67a6538c44193079147e44fb9fbf97464876b1a647a742f0c05f",
+    "zh:d5e00126f555529ce204dab59284ff998041fcafa2d76ca388a66f874b5d4a43",
+  ]
+}
