@@ -77,8 +77,3 @@ variable "kube_client_key" {
   type        = string
   description = "Kubernetes client key (file path)"
 }
-
-variable "tsuru_address" {
-  type        = string
-  description = "Tsuru API server address"
-}

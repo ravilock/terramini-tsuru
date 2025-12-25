@@ -3,7 +3,7 @@ resource "kubernetes_stateful_set" "mongodb" {
 
   metadata {
     name      = "tsuru-mongodb"
-    namespace = "tsuru"
+    namespace = "tsuru-system"
     labels = {
       app = "tsuru-mongodb"
     }
@@ -82,7 +82,7 @@ resource "kubernetes_service" "mongodb" {
 
   metadata {
     name      = "tsuru-mongodb"
-    namespace = "tsuru"
+    namespace = "tsuru-system"
     labels = {
       app = "tsuru-mongodb"
     }

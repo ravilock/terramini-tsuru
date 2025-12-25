@@ -1,6 +1,6 @@
 resource "helm_release" "keda" {
   name      = "keda"
-  namespace = "tsuru"
+  namespace = "tsuru-system"
 
   repository = "https://kedacore.github.io/charts"
   chart      = "keda"

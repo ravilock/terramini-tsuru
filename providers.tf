@@ -27,5 +27,5 @@ provider "helm" {
 }
 
 provider "tsuru" {
-  host = var.tsuru_address
+  host = "http://192.168.49.2:${module.tsuru-api.tsuru_api_http_nodeport}"
 }

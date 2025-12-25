@@ -2,7 +2,7 @@ resource "helm_release" "buildkit" {
   count = var.buildkit_enabled ? 1 : 0
 
   name      = "buildkit"
-  namespace = "tsuru"
+  namespace = "tsuru-system"
   chart     = "https://github.com/tsuru/charts/releases/download/buildkit-0.2.2/buildkit-0.2.2.tgz"
   values = [
     templatefile("${path.module}/values/build-kit.yaml", merge({

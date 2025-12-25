@@ -1,6 +1,6 @@
 resource "helm_release" "acl-api" {
   name            = "acl-api"
-  namespace       = "tsuru"
+  namespace       = "tsuru-system"
   chart           = "https://github.com/tsuru/charts/releases/download/acl-api-0.0.5/acl-api-0.0.5.tgz"
   force_update    = false
   cleanup_on_fail = true
@@ -21,7 +21,7 @@ resource "helm_release" "acl-api" {
 resource "kubernetes_secret" "acl-api" {
   metadata {
     name        = "acl-api"
-    namespace   = "tsuru"
+    namespace   = "tsuru-system"
     annotations = {}
     labels = {
       "app.kubernetes.io/part-of"    = "acl-api"

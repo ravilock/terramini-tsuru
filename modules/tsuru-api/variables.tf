@@ -24,7 +24,7 @@ variable "docker_registry" {
 variable "docker_registry_namespace" {
   description = "Docker registry namespace"
   type        = string
-  default     = "tsuru"
+  default     = "tsuru-system"
 }
 
 variable "image_tag" {
@@ -36,9 +36,23 @@ variable "image_tag" {
 variable "router_api_url" {
   description = "Kubernetes router API URL"
   type        = string
-  default     = "http://kubernetes-router.tsuru.svc.cluster.local/api"
+  default     = "http://kubernetes-router.tsuru-system.svc.cluster.local/api"
+}
+
+variable "router_api_username" {
+  description = "Kubernetes router API username"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "router_api_password" {
+  description = "Kubernetes router API password"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 locals {
-  effective_mongodb_url = var.create_mongodb ? "tsuru-mongodb.tsuru.svc.cluster.local:27017" : var.mongodb_url
+  effective_mongodb_url = var.create_mongodb ? "tsuru-mongodb.tsuru-system.svc.cluster.local:27017" : var.mongodb_url
 }

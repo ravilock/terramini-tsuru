@@ -1,6 +1,6 @@
 resource "helm_release" "acl-operator" {
   name            = "acl-operator"
-  namespace       = "tsuru"
+  namespace       = "tsuru-system"
   chart           = "https://github.com/tsuru/charts/releases/download/acl-operator-0.1.13/acl-operator-0.1.13.tgz"
   force_update    = true
   cleanup_on_fail = true

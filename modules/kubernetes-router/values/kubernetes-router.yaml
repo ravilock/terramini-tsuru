@@ -1,0 +1,19 @@
+replicaCount: ${replicas}
+
+image:
+  repository: tsuru/kubernetes-router
+  pullPolicy: Always
+  tag: ${tag}
+
+controllerModes:
+  - ingress
+  - service
+
+tracing:
+  enabled: false
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: ${jsonencode(resources)}

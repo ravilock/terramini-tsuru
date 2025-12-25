@@ -47,6 +47,8 @@ tsuruConfig:
     ingress-router:
       type: api
       api-url: ${router_api_url}
+      headers:
+        Authorization: "Basic ${base64encode("${router_api_username}:${router_api_password}")}"
 
   docker:
     repository: ${docker_registry}
